@@ -42,8 +42,6 @@ class ProductDetail extends Component {
         errName: " Enter valid Name "
       });
     }
-
-    console.log(this.state.errName);
   };
   //onblurPrice
   onBlurPrice = e => {
@@ -80,6 +78,12 @@ class ProductDetail extends Component {
         errPrice: ""
       });
     }
+    this.setState({
+      name: "",
+      price: "",
+      rating: "5",
+      id: ""
+    });
   };
 
   //delete
@@ -97,6 +101,12 @@ class ProductDetail extends Component {
         errPrice: ""
       });
     }
+    this.setState({
+      name: "",
+      price: "",
+      rating: "5",
+      id: ""
+    });
   };
 
   //save

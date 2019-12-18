@@ -43,7 +43,7 @@ class ProductList extends Component {
             }}
           >
             {list && (
-              <List style={{}}>
+              <List style={{ padding: "0px" }}>
                 {list.map(list => {
                   return (
                     <Fragment key={list.id}>
@@ -55,7 +55,10 @@ class ProductList extends Component {
                         }}
                       >
                         <ListItemText primary={`${list.name}`}></ListItemText>
-                        <ListItem primary={`$ ${list.price}`}></ListItem>
+                        <ListItemText
+                          primary={`$ ${list.price}`}
+                          style={{ flex: 1 }}
+                        ></ListItemText>
                       </ListItem>
                     </Fragment>
                   );

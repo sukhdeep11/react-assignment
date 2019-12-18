@@ -1,121 +1,139 @@
-import React, { Component } from "react";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import { AppBar, Toolbar, Typography, Button } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
+import React, { Component, Fragment } from "react";
+import { withRouter } from "react-router-dom";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  TextField,
+  Button
+} from "@material-ui/core";
+import validator from "validator";
 
 class Login extends Component {
   state = {
-    emailError: "",
-    passwordError: "",
-    invalid: true
+    email: "",
+    password: "",
+    errEmail: "",
+    errPass: "",
+    value: true
   };
-  validateEmail = e => {
-    if (!e.target.value.includes("@") || !e.target.value.includes(".")) {
-      let emailError = "Invalid email";
-      this.setState({ emailError, invalid: true });
-    } else {
-      this.setState({ emailError: "", email: e.target.value }, () =>
-        this.validate()
-      );
-    }
-  };
-  validatePassword = e => {
-    if (e.target.value.length < 8) {
-      let passwordError = "Password must be 8 characters long!";
-      this.setState({ passwordError, invalid: true });
-    } else {
-      this.setState({ passwordError: "", password: e.target.value }, () =>
-        this.validate()
-      );
-    }
-  };
-  validate = () => {
-    if (
-      !(this.state.emailError || this.state.passwordError) &&
-      this.state.email &&
-      this.state.password
-    ) {
-      this.setState({ invalid: false });
-    }
-  };
-  handleSubmit = e => {
+  submitHandler = e => {
     e.preventDefault();
     this.props.history.push("/products");
   };
+
+  validate = () => {
+    if (this.state.email !== "" && this.state.password !== "") {
+      this.setState({ value: false });
+    }
+  };
+  onChangeEmail = e => {
+    this.setState({ [e.target.name]: e.target.value });
+    const { email } = this.state;
+
+    if (validator.isEmail(email)) {
+      this.setState({ errEmail: "" });
+      this.validate();
+    } else {
+      this.setState({ errEmail: "Please! Enter valid Email" });
+    }
+  };
+  onChangePass = e => {
+    this.setState({ [e.target.name]: e.target.value });
+    const { password } = this.state;
+
+    var passPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,20}$/;
+    if (passPattern.test(password)) {
+      this.setState({ errPass: "" });
+
+      this.validate();
+    } else {
+      this.setState({
+        errPass:
+          "Password must be at least 6 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit "
+      });
+    }
+  };
   render() {
     return (
-      <React.Fragment>
-        <Grid container sm={12}>
-          <Grid item sm={6} style={{ width: 700 }}>
-            <Paper>
-              <AppBar
-                position="static"
-                style={{
-                  borderRadius: 2,
-                  textTransform: "capitalize",
-                  fontSize: 16,
-                  alignItems: "center"
-                }}
-              >
-                <Toolbar>
-                  <Typography
-                    variant="overline"
-                    color="inherit"
-                    style={{
-                      flex: 1,
-                      textTransform: "capitalize",
-                      fontSize: 14
-                    }}
-                  >
-                    Product Manager
+      <Fragment>
+        <div
+          style={{
+            width: "600px",
+            border: "1px solid grey",
+            borderRadius: "3px",
+            position: "absolute",
+            right: "30%",
+            top: "25%"
+          }}
+        >
+          <AppBar position="static">
+            <Toolbar>
+              <Typography>Login</Typography>
+            </Toolbar>
+          </AppBar>
+          <div style={{ margin: "12px" }}>
+            <form onSubmit={this.submitHandler}>
+              <label htmlFor="text" required>
+                Email
+              </label>
+              <TextField
+                name="email"
+                fullWidth
+                variant="outlined"
+                required
+                placeholder="Enter Your Email"
+                value={this.state.email}
+                onChange={this.onChangeEmail}
+              />
+              {
+                (this,
+                this.state.errEmail && (
+                  <Typography style={{ color: "red" }}>
+                    {this.state.errEmail}
                   </Typography>
-                </Toolbar>
-              </AppBar>
-              <form onSubmit={this.handleSubmit}>
-                <br />
-                <Typography variant="subtitle1">Email</Typography>
-                <TextField
-                  name="price"
-                  fullWidth
-                  id="price"
-                  variant="outlined"
-                  placeholder="Enter Your Email"
-                  required
-                  onChange={this.onChange}
-                  onBlur={this.onBlurPrice}
-                />
-                <Typography variant="subtitle1">Password</Typography>
-                <TextField
-                  name="price"
-                  fullWidth
-                  id="price"
-                  variant="outlined"
-                  required
-                  placeholder="Enter Your Password"
-                  onChange={this.onChange}
-                  onBlur={this.onBlurPrice}
-                />
-                <Typography variant="subtitle1" style={{ color: "red" }}>
-                  {this.state.passwordError}
-                </Typography>
-                <br /> <br />
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  type="submit"
-                  fullWidth
-                  disabled={this.state.invalid}
-                >
-                  Log In
-                </Button>
-              </form>
-            </Paper>
-          </Grid>
-        </Grid>
-      </React.Fragment>
+                ))
+              }
+              <label htmlFor="text" required>
+                Password
+              </label>
+              <TextField
+                name="password"
+                fullWidth
+                type="password"
+                id="name"
+                variant="outlined"
+                placeholder="Enter Your Password"
+                required
+                value={this.state.password}
+                onChange={this.onChangePass}
+              />
+              {
+                (this,
+                this.state.errPass && (
+                  <Typography style={{ color: "red" }}>
+                    {this.state.errPass}
+                  </Typography>
+                ))
+              }
+              <br></br>
+              <br></br>
+              <Button
+                variant="contained"
+                color="secondary"
+                type="submit"
+                fullWidth
+                disabled={false}
+              >
+                Log In
+              </Button>
+              <br></br>
+            </form>
+          </div>
+        </div>
+      </Fragment>
     );
   }
 }
 
-export default Login;
+export default withRouter(Login);
