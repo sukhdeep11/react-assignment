@@ -123,7 +123,7 @@ class Login extends Component {
                 color="secondary"
                 type="submit"
                 fullWidth
-                disabled={false}
+                disabled={this.state.value}
               >
                 Log In
               </Button>
